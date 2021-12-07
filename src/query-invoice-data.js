@@ -57,25 +57,13 @@ module.exports = async function queryInvoiceData({
     return responseData.QueryInvoiceDataResponse;
   }
 
-  const data = await new Promise((resolve, reject) =>
-    zlib.gunzip(
-      Buffer.from(invoiceDataResult.invoiceData, 'base64'),
-      async (err, buffer) => {
-        if (err) reject(err);
-        try {
-          resolve(await parseXml(buffer));
-        } catch (e) {
-          reject(e);
-        }
-      }
-    )
-  );
+  let buffer = Buffer.from(invoiceDataResult.invoiceData, 'base64');
 
-  return data;
-  /*
-    invoiceDataResult.invoiceData = await parseXml(
-      Buffer.from(invoiceDataResult.invoiceData, 'base64')
-    );
+  if (invoiceDataResult.compressedContentIndicator === 'true') {
+    buffer = await promisify(zlib.unzip)(buffer);
+  }
 
-    return invoiceDataResult;*/
+  invoiceDataResult.invoiceData = await parseXml(buffer);
+
+  return invoiceDataResult;
 };
