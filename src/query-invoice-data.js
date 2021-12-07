@@ -51,6 +51,8 @@ module.exports = async function queryInvoiceData({
     path: '/queryInvoiceData',
   });
 
+  console.log('RAW NAV RESPONSE: ', responseData);
+
   const { invoiceDataResult } = responseData.QueryInvoiceDataResponse;
 
   if (!invoiceDataResult) {
