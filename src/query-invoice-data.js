@@ -65,7 +65,5 @@ module.exports = async function queryInvoiceData({
     buffer = await promisify(zlib.unzip)(buffer);
   }
 
-  invoiceDataResult.invoiceData = await parseXml(buffer);
-
-  return invoiceDataResult;
+  return await parseXml(buffer);
 };
